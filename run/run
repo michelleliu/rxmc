@@ -1,0 +1,92 @@
+#!/bin/bash
+#
+# Ncycle     = Number Of Cycles
+# Ninit      = Number Of Equilibration Cycles (Check Value!)
+# Npart      = Number Of Particles
+# MolFrac    = Mole Fraction of Particles in Reservoir (for Mu)
+# Linit      = Read Old Configuration From Disk ?
+#              .True. Make New Initial Configuration
+#              .False. Read Initial Configuration From File Coordold
+# Temp       = Temperature
+# Iensemble  = Which Ensemble Do We Simulate ?
+#              1 = Nvt Ensmeble
+#              2 = Npt Ensemble
+#              3 = Muvt Ensemble (Specify The Fugacity Press)
+#              4 = Gibbs Ensemble
+#              5 = Reaction Ensemble
+# Pdisp      = Fraction Displacements
+# Pswap      = Fraction Particle Swaps
+# Pvol       = Fraction Volume Changes
+# Deltax     = Maximum Particle Displacement
+# Deltav     = Maximum Volume Change
+# Press/Fuga = Pressure (Npt Ensemble) Or Fugacity (Muvt Ensemble)
+#              For Muvt Ensemble: Fuga=Exp[Beta*Mu]/Beta
+# Box        = Size Of Each Simulation Box
+#
+#
+# Output
+#
+# Coordnew    = Final Coordinates
+# Radial      = Radial Distribution Function
+# Traject.xyz = Trajectory (Can Be Visualized Using vmd)
+# Results     = Instantaneous Values Of:
+#               For Gibbs Ensemble:
+#               Column 1: Cycle Number
+#               Column 2: Density Box 1
+#               Column 3: Density Box 2
+#               Column 4: Energy Per Particle Box 1
+#               Column 5: Energy Per Particle Box 2
+#               Column 6: Pressure Box 1
+#               Column 7: Pressure Box 2
+#               For NVT, NPT, MuVT Ensemble
+#               Column 1: Cycle Number
+#               Column 2: Density
+#               Column 3: Energy Per Particle
+#               Column 4: Pressure
+# Rho         = Probability Distribution For A Certain Density
+
+# 1   1
+# 1   2
+# 1   3
+# 1   4
+# 2   2
+# 2   3
+# 2   4
+# 3   3
+# 3   4
+# 4   4
+
+cat > Input <<endofdata1
+Ncycle   Ninit   Linit   Temp   Iensemble
+1000     200    .False   1.0    4
+Pdisp    Pswap   Pvol    Prxn
+1        1       0.03    1
+Nrxn     Ntype
+2        2
+Deltax   Deltav  Press/Fuga
+0.5      40       1
+Box(1)   Box(2)
+10       10
+Nparts,MolFrac (Ntype)
+160 1
+100 1
+Eps,Sig (Ntype*(Ntype+1)/2)
+1 1
+0.75 1
+1 1
+Nreactants,Nproducts (Nrxn)
+2 1
+1 2
+Reactions (Nrxn heading) (Nproducts + Nreactants)
+Rxn 1
+1 2
+1 2
+2 1
+Rxn 2
+2 1
+3 1
+4 1
+endofdata1
+
+time ../source/a.out
+
