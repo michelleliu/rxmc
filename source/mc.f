@@ -440,9 +440,7 @@ C     Write results
          Endif
 
          If(Mod(Icycle,Ncycle/100).Eq.0) Then
-C     Maybe this should just write total particles FIXME
-            Do itype=1,Ntype
-               Write(22,*) Nparts(itype)
+            Write(22,*) Npart
             Enddo
             Write(22,*)
 
