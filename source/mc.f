@@ -46,7 +46,7 @@ C     Loop over types
          SumFrac = SumFrac + MolFrac(itype)
       Enddo
       Do itype=1,Ntype
-         MolFrac(itype) = MolFrac(itype)/SumFrac
+         MolFrac(itype) = Dble(MolFrac(itype))/Dble(SumFrac)
       Enddo
       Read(21,*)
       Do itype=1,Ntype
@@ -441,7 +441,6 @@ C     Write results
 
          If(Mod(Icycle,Ncycle/100).Eq.0) Then
             Write(22,*) Npart
-            Enddo
             Write(22,*)
 
 C     Write trajectory
