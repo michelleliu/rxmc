@@ -47,7 +47,12 @@ C     Put Back In The Box
       Call Epart(Ib,Virnew,Unew,Rxtrial,Rytrial,Rztrial
      &     ,Ipart,Types(Ipart))
 
-      Call Accept(Dexp(-Beta*(Unew-Uold)),Laccept)
+      !Write(6,*) Unew,Uold
+      If((-Beta*(Unew-Uold)>0)) Then
+         Laccept=.True.
+      Else
+         Call Accept(Dexp(-Beta*(Unew-Uold)),Laccept)
+      Endif
 
       Av2 = Av2 + 1.0d0
 

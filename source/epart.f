@@ -47,7 +47,6 @@ C     Compute The Energy Of Particle Ipart In Box Ib
                R2   = R2*R2*R2
                Upot = Upot + 4.0d0*Eps(Types(I),Mytype)*R2*(R2-1.0d0)
      &              - Ecut(Types(I),Mytype)
-C     FIXME!!!! ?? Virial
                Vir  = Vir  + 48.0d0*Eps(Types(I),Mytype)*R2*(R2-0.5d0)
             Endif
          Endif

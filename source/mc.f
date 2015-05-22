@@ -7,7 +7,7 @@ C     Monte Carlo In The Npt, Nvt, Muvt, And Gibbs Ensemble
 
       Logical Linit
       Integer Ncycle,Ninit,Nmove,Iensemble,I,J,Icycle,Icycle2,Dd(2)
-     $     ,itype,jtype,icounter,irxn,jrxn
+     $     ,itype,jtype,irxn,jrxn
       Double Precision Pdisp,Pswap,Pvol,Prxn,Temp,Deltax,Deltav,V,E,Rm
      $     ,Randomnumber,Dummy,Avv1,Avv2,Avs1,Avs2,Avd1,Avd2,Press
      $     ,SumFrac,Avr1,Avr2
@@ -34,6 +34,8 @@ C     Read number of types and reactions
       Read(21,*) Nrxn,Ntype
       Read(21,*)
       Read(21,*) Deltax,Deltav,Press
+      Read(21,*)
+      Read(21,*) Nprint
       Read(21,*)
       Read(21,*) Box(1),Box(2)
 C     Loop over types
@@ -138,6 +140,7 @@ C     Iensemble = 5    Reaction Ensemble
       If(Iensemble.Eq.1) Then
          Pswap = 0.0d0
          Pvol  = 0.0d0
+         Prxn  = 0.0d0
          Nbox  = 1
 
          Write(6,*)
@@ -146,6 +149,7 @@ C     Iensemble = 5    Reaction Ensemble
 
       Elseif(Iensemble.Eq.2) Then
          Pswap = 0.0d0
+         Prxn  = 0.0d0
          Nbox  = 1
 
          If(Press.Le.0.0d0) Press = 0.0d0
@@ -158,6 +162,7 @@ C     Iensemble = 5    Reaction Ensemble
 
       Elseif(Iensemble.Eq.3) Then
          Pvol  = 0.0d0
+         Prxn  = 0.0d0
          Nbox  = 1
 
          If(Press.Lt.1.0d-100) Stop "Fugacity Too Low In Muvt Ensemble
@@ -171,6 +176,7 @@ C     Iensemble = 5    Reaction Ensemble
          Write(6,*)
 
       Elseif(Iensemble.Eq.4) Then
+         Prxn  = 0.0d0
          Nbox  = 2
 
          Write(6,*)
@@ -178,7 +184,7 @@ C     Iensemble = 5    Reaction Ensemble
          Write(6,*)
 
       Elseif(Iensemble.Eq.5) Then
-         Nbox  = 1
+         Nbox  = 2
          Pvol  = 0.0d0
 
          Write(6,*)
@@ -187,13 +193,15 @@ C     Iensemble = 5    Reaction Ensemble
          Write(6,*)
          Do irxn=1,Nrxn
             Write(6,*) 'Reaction ',irxn
-            Write(6,*) '      Reactants'
+            Write(6,*) '    Reactants'
             Do jrxn=1,Nreactants(irxn)
-               Write(6,*) Reactants(irxn,jrxn)
+               Write(6,*) '        Type:',Reactants(irxn,jrxn)
+     &              ,' , Stoich:',ReactantStoich(irxn,jrxn)
             Enddo
-            Write(6,*) '      Products'
+            Write(6,*) '    Products'
             Do jrxn=1,Nproducts(irxn)
-               Write(6,*) Products(irxn,jrxn)
+               Write(6,*) '        Type:',Products(irxn,jrxn)
+     &              ,' , Stoich:',ProductStoich(irxn,jrxn)
             Enddo
          Enddo
       Else
@@ -255,8 +263,8 @@ C        Enddo
             Read(21,*)Rx(I),Ry(I),Rz(I)
      &           ,Types(I),Ibox(I)
 
-            If(Ibox(I).Eq.2.And.Iensemble.Ne.4) Stop "Particle
-     &           In Wrong Box !!!"
+            If(Ibox(I).Eq.2.And.Iensemble.Ne.4.And.Iensemble.Ne.5) Stop
+     &           "Particle In Wrong Box !!!"
 
             Npbox(Ibox(I)) = Npbox(Ibox(I)) + 1
             Nparts(Types(I)) = Nparts(Types(I)) + 1
@@ -328,6 +336,9 @@ C     Start Of The Simulation
 C     Starting simulation loop
 
       Do Icycle=1,Ncycle
+      If(Mod(Icycle,Ncycle/10).Eq.0) Then
+        Write(6,*) 'Got to cycle number ',Icycle
+      Endif
 
          Nmove = Max(20,Npart)
 
@@ -362,15 +373,17 @@ C     Particle Swap
                Endif
 
             Elseif(Rm.Lt.Prxn.And.(Iensemble.Eq.5)) Then
+               !Write(6,*) 'REACTION MOVE!!!'
 
 C     Reaction Move
-
 C              FIXME !!!!!!
-C              If(Randomnumber().Lt.0.5d0) Then
-C                 Call React_Forward(Avr1,Avr2,Press,stuff)
-C              Else
-C                 Call React_Reverse(Avr1,Avr2,Press,stuff)
-C              Endif
+
+               !Write(6,*) 'Avr1,Avr2',Avr1,Avr2
+               If(Randomnumber().Lt.0.5d0) Then
+                  Call React_Forward(Avr1,Avr2)
+               Else
+                  Call React_Backward(Avr1,Avr2)
+               Endif
 
             Else
 
@@ -439,7 +452,7 @@ C     Write results
             Call Sample(3,Iensemble)
          Endif
 
-         If(Mod(Icycle,Ncycle/100).Eq.0) Then
+         If(Mod(Icycle,Ncycle/Nprint).Eq.0) Then
             Write(22,*) Npart
             Write(22,*)
 
@@ -513,7 +526,7 @@ C     Check Energy Calculation
       Enddo
 
       If(Dd(1).Ne.Npbox(1).Or.Dd(2).Ne.Npbox(2)) Then
-         Write(6,*) 'Error !!!!'
+         Write(6,*) 'Error box numbers do not match !!!!'
          Write(6,*) Npart
          Write(6,*) Dd(1),Npbox(1)
          Write(6,*) Dd(2),Npbox(2)

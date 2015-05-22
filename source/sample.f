@@ -48,6 +48,7 @@ C     Sample Ensemble Averages
 
          Do J=1,2
             Av1(1,J) = Av1(1,J) + Etotal(J)
+C            Write(6,*) 'Energy',Av1(1,J)
             If(Iensemble.Ne.3) Av1(2,J) = Av1(2,J) +
      &           Dble(Npbox(J))/(Beta*(Box(J)**3)) +
      &           Vtotal(J)/(3.0d0*(Box(J)**3))

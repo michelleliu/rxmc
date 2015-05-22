@@ -29,6 +29,7 @@
 # Coordnew    = Final Coordinates
 # Radial      = Radial Distribution Function
 # Traject.xyz = Trajectory (Can Be Visualized Using vmd)
+# Nprint      = Frequency of trajectory output
 # Results     = Instantaneous Values Of:
 #               For Gibbs Ensemble:
 #               Column 1: Cycle Number
@@ -58,13 +59,15 @@
 
 cat > Input <<endofdata1
 Ncycle   Ninit   Linit   Temp   Iensemble
-1000     200    .False   1.0    4
+1000     200    .True.   1.0    5
 Pdisp    Pswap   Pvol    Prxn
-1        1       0.03    1
+1        1       0.03    5
 Nrxn     Ntype
-2        2
+1        2
 Deltax   Deltav  Press/Fuga
 0.5      40       1
+Nprint
+100
 Box(1)   Box(2)
 10       10
 Nparts,MolFrac (Ntype)
@@ -75,17 +78,11 @@ Eps,Sig (Ntype*(Ntype+1)/2)
 0.75 1
 1 1
 Nreactants,Nproducts (Nrxn)
-2 1
-1 2
-Reactions (Nrxn heading) (Nproducts + Nreactants)
+1 1
+Reactions,Stoich (Nrxn heading) (Nproducts + Nreactants)
 Rxn 1
 1 2
-1 2
 2 1
-Rxn 2
-2 1
-3 1
-4 1
 endofdata1
 
 time ../source/a.out

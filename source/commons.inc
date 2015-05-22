@@ -14,7 +14,12 @@ C     Beta     = 1/Temperature
 C     Etotal   = Total Energy Of A Box
 C     Vtotal   = Total Virial Of A Box
 C
-C     Nrxn     = Number Of Reactions (Reaction Ensemble MC only)
+C     Nrxn           = Number Of Reactions (Reaction Ensemble MC only)
+C     Nreactants     = Number Of Reactants
+C     Nproducts      = Number Of Products
+C     Reactants      = Names Of Reactants (one entry per reactant)
+C     ReactantStoich = Stoichiometric Coefficient Of Reactants
+C     ProductsStoich = Stoichiometric Coefficient Of Products
 C
 C     Maxtype
 C     Maxrxn
@@ -23,14 +28,16 @@ C     Sig()
 C     Verbose
 C     Nparts()
 C     Types()
+C
+C     Nprint   = Trajectory Print Frequency
 
       Integer Maxpart,Maxtype,Maxrxn
 
       Logical Verbose
 
       Parameter (Maxpart = 1024)
-      Parameter (Maxtype = 20)
-      Parameter (Maxrxn = 10)
+      Parameter (Maxtype = 10)
+      Parameter (Maxrxn = 5)
 
       Double Precision Eps(Maxtype,Maxtype),Sig(Maxtype,Maxtype)
 
@@ -44,9 +51,12 @@ C     Types()
      $     ,Reactants(Maxrxn,4),Products(Maxrxn,4)
      $     ,ReactantStoich(Maxrxn,4),ProductStoich(Maxrxn,4)
 
+      Integer Nprint
+
       Common /Mycomms/ Rx,Ry,Rz,MolFrac
      $     ,Box,Ecut,Rcutsq,Beta,Etotal,Eps,Sig
      $     ,Vtotal,Npart,Ibox,Npbox,Npboxtype,Nbox
+     $     ,Nprint
      $     ,Nrxn,Ntype,Nparts,Types,Verbose
      $     ,Nreactants,Nproducts
      $     ,Reactants,Products,ReactantStoich,ProductStoich
