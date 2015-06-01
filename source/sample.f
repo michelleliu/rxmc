@@ -63,7 +63,7 @@ C     Sample Chemical Potential
 
          If(Iensemble.Ne.3) Then
 
-            If(Iensemble.Eq.4) Then
+            If(Iensemble.Eq.4.Or.Iensemble.Eq.5) Then
                Nb = 2
             Else
                Nb = 1
@@ -75,8 +75,7 @@ C     Sample Chemical Potential
                   Yi = Randomnumber()*Box(J)
                   Zi = Randomnumber()*Box(J)
 
-C                 FIXME !!!!
-                  Call Epart(J,Dummy,Up,Xi,Yi,Zi,0,1)
+                  Call Epart(J,Dummy,Up,Xi,Yi,Zi,0,Types(I))
 
                   Avmu1(J) = Avmu1(J) +
      &                 ((Box(J)**3)/(Dble(Npbox(J)+1)))*Dexp(-Beta*Up)
@@ -88,7 +87,7 @@ C                 FIXME !!!!
 
 C     Sample Density Distribution
 
-         If(Iensemble.Eq.4.Or.Iensemble.Eq.2) Then
+         If(Iensemble.Eq.4.Or.Iensemble.Eq.2.Or.Iensemble.Eq.5) Then
             Avrho2 = Avrho2 + 1.0d0
 
             Do J=1,Nbox
@@ -122,7 +121,7 @@ C     Write Averages
          Write(6,*)
          Write(6,*)
 
-         If(Iensemble.Eq.4) Then
+         If(Iensemble.Eq.4.Or.Iensemble.Eq.5) Then
             Write(6,*) 'Averages Box 2'
             Write(6,*)
             Write(6,*) '<E>                  : ',Av1(1,2)/Av2
@@ -139,7 +138,7 @@ C     Write Averages
             Write(6,*)
          Endif
 
-         If(Iensemble.Eq.4.Or.Iensemble.Eq.2) Then
+         If(Iensemble.Eq.4.Or.Iensemble.Eq.2.Or.Iensemble.Eq.5) Then
             Open(21,File="Rho",Status="Unknown")
             Do I=1,Maxbin
                Write(21,'(3e20.10)') (Dble(I)-0.5d0)*Delta

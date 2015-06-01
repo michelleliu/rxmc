@@ -28,7 +28,7 @@ C     Set Verbose to .True. for verbose debugging statements
       Read(21,*)
       Read(21,*) Ncycle,Ninit,Linit,Temp,Iensemble
       Read(21,*)
-      Read(21,*) Pdisp,Pswap,Pvol,Prxn
+      Read(21,*) Pdisp,Pswap,Pvol,Prxn,Potential
       Read(21,*)
 C     Read number of types and reactions
       Read(21,*) Nrxn,Ntype
@@ -452,7 +452,7 @@ C     Write results
             Call Sample(3,Iensemble)
          Endif
 
-         If(Mod(Icycle,Ncycle/Nprint).Eq.0) Then
+         If(Mod(Icycle,Nprint).Eq.0) Then
             Write(22,*) Npart
             Write(22,*)
 

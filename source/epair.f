@@ -7,6 +7,7 @@ C     Compute The Energy Of Particle Ipart In Box Ib
 
       Integer Ib,Mytype,Yourtype
       Double Precision Vir,Upot,Dx,Dy,Dz,R2,Bx,Hbx,Xi,Yi,Zi,Xj,Yj,Zj
+      Double Precision Radius
 
       Upot = 0.0d0
       Vir  = 0.0d0
@@ -38,12 +39,25 @@ C     Compute The Energy Of Particle Ipart In Box Ib
 
       R2 = Dx**2 + Dy**2 + Dz**2
 
-      If(R2.Lt.Rcutsq) Then
-         R2   = Sig(Yourtype,Mytype)*1.0d0/R2
-         R2   = R2*R2*R2
-         Upot = Upot + 4.0d0*Eps(Yourtype,Mytype)*R2*(R2-1.0d0)
-     &        - Ecut(Yourtype,Mytype)
-         Vir  = Vir  + 48.0d0*Eps(Yourtype,Mytype)*R2*(R2-0.5d0)
+      If(Potential.Eq.1) Then
+         If(R2.Lt.Rcutsq) Then
+            R2   = Sig(Yourtype,Mytype)*1.0d0/R2
+            R2   = R2*R2*R2
+            Upot = Upot + 4.0d0*Eps(Yourtype,Mytype)*R2*(R2-1.0d0)
+     &           - Ecut(Yourtype,Mytype)
+            Vir  = Vir  + 48.0d0*Eps(Yourtype,Mytype)*R2*(R2-0.5d0)
+         Endif
+      Else If(Potential.Eq.0) Then
+         Radius  = 0.5d0*(Eps(Yourtype,Yourtype)+Eps(Mytype,Mytype))
+         If(R2.Lt.Radius) Then
+            Upot = Upot + 1000000d0
+            Vir  = Vir + 1000000d0
+         Else
+            Upot = Upot
+            Vir  = Vir
+         Endif
+      Else
+         Stop "Error potential!!"
       Endif
 
       Return

@@ -11,14 +11,13 @@ C     Change Products Into Reactants In The Reaction Ensemble
       Integer I,Ipart,Irxn,iproduct,jproduct,Iprodtype,Ireacttype
      $     ,istoich,reactantcounter,productcounter
      $     ,ireactant,jreactant,Ib,HoleCounter
-     $     ,numproducts,numreactants,OldNpart !! number of molecules
-     $     ,Mytype,Yourtype,selectioncount,J,Typeadd(10)
+     $     ,numproducts,numreactants,OldNpart
+     $     ,Mytype,Yourtype,selectioncount,Typeadd(10)
       Double Precision Av1,Av2,DeltaUrxn,DeltaVirrxn,Kequil
      $     ,AccNumer,AccDenom,Xdel,Ydel,Zdel,Xadd(10),Yadd(10),Zadd(10)
-     $     ,Randomnumber,Upot,Vir,Dummy
+     $     ,Randomnumber,Upot(5),Vir
 
       Double Precision Xi,Yi,Zi,Xj,Yj,Zj
-C      Double Precision Xi,Yi,Zi,Av1,Av2,Unew,Virnew,Randomnumber
 
 C     Equilibrium constant
       Kequil = 1.0d0
@@ -88,39 +87,12 @@ C                    Check that we are not using the same particle twice
                Do While (Types(Ipart).ne.Iprodtype.Or.Doubledipping
      $              .Or.Ibox(Ipart).ne.Ib)
                   selectioncount = selectioncount + 1
-C                  If(selectioncount.Gt.10000) Then
-CC                    Write trajectory and quit
-C                    Write(6,*) Npboxtype(Ib,Iprodtype)
-C    $                    ," alleged particles of type ",Iprodtype
-C    $                    ," in box ",Ib
-C                    Do J=1,Npart
-C                       If(Ibox(J).Eq.2) Then
-C                          Dummy = 4.0d0*(Box(1) + 2.0d0)
-C                       Else
-C                          Dummy = 0.0d0
-C                       Endif
-C                       Write(6,'(I2,3f15.5)') Types(J)
-C    &                       ,4.0d0*Rx(J)+Dummy
-C    &                       ,4.0d0*Ry(J),4.0d0*Rz(J)
-C                    Enddo
-C                    Stop "Error not enough particles!"
-                     !If(Types(Ipart).ne.Iprodtype) Then
-                     !   Write(6,*) 'Wrong type rxmc'
-                     !Endif
-                     !If(Ibox(Ipart).ne.Ib) Then
-                     !   Write(6,*) 'Wrong box rxmc'
-                     !Endif
-C                  Endif
                   Doubledipping=.False.
-                  !Write(6,*) 'Choosing particle again...'
                   Ipart = 1 + Int(Dble(Npart)*Randomnumber())
                   If(productcounter.gt.1) Then
                      Do jproduct=1,productcounter-1
                         If(Listproducts(jproduct).eq.Ipart) Then
                            Doubledipping=.True.
-                           If(selectioncount.Gt.100) Then
-                              !Write(6,*) 'Double dipping'
-                           Endif
                         Endif
                      Enddo
                   Endif
@@ -168,9 +140,9 @@ C        Calculate Delta U contribution of pr0ducts
             Xdel = Rx(Ipart)
             Ydel = Ry(Ipart)
             Zdel = Rz(Ipart)
-            Call Epart(Ib,Vir,Upot,Xdel,Ydel,Zdel
+            Call Epart(Ib,Vir,Upot(1),Xdel,Ydel,Zdel
      $           ,Ipart,Types(Listproducts(iproduct)))
-            DeltaUrxn = DeltaUrxn - Upot
+            DeltaUrxn = DeltaUrxn - Upot(1)
             DeltaVirrxn = DeltaVirrxn - Vir
             Do jproduct=1,numproducts
                If(iproduct.ne.jproduct) Then
@@ -182,9 +154,9 @@ C        Calculate Delta U contribution of pr0ducts
                   Zj = Rz(Listproducts(jproduct))
                   Mytype = Types(Listproducts(iproduct))
                   Yourtype = Types(Listproducts(jproduct))
-                  Call Epair(Ib,Vir,Upot,Xi,Yi,Zi,Xj,Yj,Zj
+                  Call Epair(Ib,Vir,Upot(2),Xi,Yi,Zi,Xj,Yj,Zj
      $                 ,Mytype,Yourtype)
-                  DeltaUrxn = DeltaUrxn + Upot
+                  DeltaUrxn = DeltaUrxn + Upot(2)
                   DeltaVirrxn = DeltaVirrxn + Vir
                Endif
             Enddo
@@ -196,9 +168,9 @@ C        Calculate Delta U contribution of re4ctants
             Xi = Xadd(ireactant)
             Yi = Yadd(ireactant)
             Zi = Zadd(ireactant)
-            Call Epart(Ib,Vir,Upot,Xi,Yi,Zi,Ipart
+            Call Epart(Ib,Vir,Upot(3),Xi,Yi,Zi,Ipart
      $           ,Typeadd(reactantcounter))
-            DeltaUrxn = DeltaUrxn + Upot
+            DeltaUrxn = DeltaUrxn + Upot(3)
             DeltaVirrxn = DeltaVirrxn + Vir
             Do jreactant=1,numreactants
                If(jreactant.ne.ireactant) Then
@@ -210,10 +182,10 @@ C        Calculate Delta U contribution of re4ctants
                   Zj = Zadd(jreactant)
                   Mytype = Typeadd(ireactant)
                   Yourtype = Typeadd(jreactant)
-                  Call Epair(Ib,Vir,Upot,Xi,Yi,Zi,Xj,Yj,Zj
+                  Call Epair(Ib,Vir,Upot(4),Xi,Yi,Zi,Xj,Yj,Zj
      $                 ,Mytype,Yourtype)
-                  DeltaUrxn = DeltaUrxn - Upot
-                  DeltaVirrxn = DeltaVirrxn - Vir
+                  DeltaUrxn = DeltaUrxn + Upot(4)
+                  DeltaVirrxn = DeltaVirrxn + Vir
                Endif
             Enddo
             Do iproduct=1,numproducts
@@ -225,44 +197,29 @@ C        Calculate Delta U contribution of re4ctants
                Zj = Rz(Listproducts(iproduct))
                Mytype = Typeadd(ireactant)
                Yourtype = Types(Listproducts(iproduct))
-               Call Epair(Ib,Vir,Upot,Xi,Yi,Zi,Xj,Yj,Zj
+               Call Epair(Ib,Vir,Upot(5),Xi,Yi,Zi,Xj,Yj,Zj
      $              ,Mytype,Yourtype)
-                  DeltaUrxn = DeltaUrxn - Upot
+                  DeltaUrxn = DeltaUrxn - Upot(5)
                   DeltaVirrxn = DeltaVirrxn - Vir
             Enddo
          Enddo
 
-         !Write(6,*) '  Checkpoint 1'
 C        Acceptance?
-         !Write(6,*) AccNumer,AccDenom,Kequil,Beta,DeltaUrxn
          If(DeltaUrxn.lt.((-1/Beta)*Log(AccDenom/(AccNumer*Kequil)))) Then
             Laccept=.True.
          Else
             Call Accept((AccNumer/AccDenom)*Kequil*Dexp(-Beta*DeltaUrxn)
      &           ,Laccept)
          Endif
-         !Write(6,*) '  Checkpoint 2'
 
 C        Accept Or Reject
 
          If(Laccept) Then
 
-            !Write(6,*) 'Backward reaction accepted'
             Av1 = Av1 + 1.0d0
-
-            !Write(6,*) 'reacting molecules'
-            !Do iproduct=1,numproducts
-               !Write(6,*) Listproducts(iproduct)
-            !Enddo
 
 C           Bookkeeping numbers of things
             OldNpart = Npart
-
-            Do J=1,Npart
-               If(Types(J).eq.0) Then
-                  Write(6,*) "Type error before bookkeeping!"
-               Endif
-            Enddo
 
             Do iproduct=1,Nproducts(Irxn)
                Iprodtype=Products(Irxn,iproduct)
@@ -283,11 +240,10 @@ C           Bookkeeping numbers of things
                Nparts(Ireacttype) = Nparts(Ireacttype) +
      &              ProductStoich(Irxn,ireactant)
             Enddo
-            Etotal(Ib) = Etotal(Ib) - DeltaUrxn
-            Vtotal(Ib) = Vtotal(Ib) - DeltaVirrxn
+            Etotal(Ib) = Etotal(Ib) + DeltaUrxn
+            Vtotal(Ib) = Vtotal(Ib) + DeltaVirrxn
 
 C           All the bookkeeping
-C ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ stuff below here is sketchy
 
 C           Establish re4ctant indices in place of pr0ducts
             !Write(6,*) 'Reactant indices'
@@ -320,10 +276,7 @@ C           Establish re4ctant indices in place of pr0ducts
                   Listproducts(ireactant)=-1
                Enddo
 C           Fill in holes left by removing pr0duct particles
-C           Possibly super ratchet
                HoleCounter = -1
-            !If(numreactants.le.numproducts) Then
-               !Do iproduct=(numreactants+1),numproducts
                Do iproduct=(numreactants+1),numproducts
                   HoleCounter = HoleCounter + 1
 C                 Move to next particle if current index is a pr0duct
@@ -342,23 +295,15 @@ C    &                    ',Listproducts(iproduct)
                   Endif
                Enddo
             Endif
-C           Check types
-            Do J=1,Npart
-               If(Types(J).eq.0) Then
-                  Write(6,*) "React backward type error!"
-               Endif
-            Enddo
-C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ end of sketchy
 
 C        Increment number of attempted moves
          Av2 = Av2 + 1.0d0
 
          Endif
       Else
-         !Write(6,*) '  Not reacting'
+C        Not reacting
 C        Increment number of attempted moves
          Av2 = Av2 + 1.0d0
       Endif
-      !Write(6,*) '  Done react backward, Av2 = ',Av2
       Return
       End

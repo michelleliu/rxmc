@@ -14,6 +14,7 @@
 #              3 = Muvt Ensemble (Specify The Fugacity Press)
 #              4 = Gibbs Ensemble
 #              5 = Reaction Ensemble
+# Potential  = 0 for Hard Sphere, 1 for Lennard-Jones
 # Pdisp      = Fraction Displacements
 # Pswap      = Fraction Particle Swaps
 # Pvol       = Fraction Volume Changes
@@ -59,9 +60,9 @@
 
 cat > Input <<endofdata1
 Ncycle   Ninit   Linit   Temp   Iensemble
-1000     200    .True.   1.0    5
-Pdisp    Pswap   Pvol    Prxn
-1        1       0.03    5
+10000    200    .True.   0.7    5
+Pdisp    Pswap   Pvol    Prxn   Potential
+1        1       0.03    5      1
 Nrxn     Ntype
 1        2
 Deltax   Deltav  Press/Fuga
