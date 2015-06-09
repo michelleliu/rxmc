@@ -38,7 +38,7 @@ C     Nprint   = Trajectory Print Frequency
 
       Logical Verbose
 
-      Parameter (Maxpart = 1024)
+      Parameter (Maxpart = 2048)
       Parameter (Maxtype = 10)
       Parameter (Maxrxn = 5)
 

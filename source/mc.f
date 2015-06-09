@@ -254,7 +254,7 @@ C        Enddo
          Read(21,*) Box(1),Box(2)
          Read(21,*) Npart
          Read(21,*) Ntype
-         Read(21,*)
+         Read(21,*) Nbox
 
          If(Npart.Lt.0.Or.Npart.Gt.Maxpart) Stop "Error Npart !!!"
          If(Min(Box(1),Box(2)).Lt.5.0d0) Stop "Boxes Too Small !!!"
@@ -287,10 +287,12 @@ C        Enddo
       Do itype=1,Ntype
          Write(6,*) 'Npbox 1, type    : ',itype,Npboxtype(1,itype)
       Enddo
-      If(Nbox.Eq.2) Write(6,*) 'Npbox 2              : ',Npbox(2)
-      Do itype=1,Ntype
+      If(Nbox.Eq.2) Then
+         Write(6,*) 'Npbox 2              : ',Npbox(2)
+         Do itype=1,Ntype
          Write(6,*) 'Npbox 2, type    : ',itype,Npboxtype(2,itype)
-      Enddo
+         Enddo
+      Endif
       Write(6,*) '<Rho1>               : ',Dble(Npbox(1))/(Box(1)**3)
       If(Nbox.Eq.2)
      &     Write(6,*) '<Rho2>               : ',
@@ -336,9 +338,9 @@ C     Start Of The Simulation
 C     Starting simulation loop
 
       Do Icycle=1,Ncycle
-      If(Mod(Icycle,Ncycle/10).Eq.0) Then
-        Write(6,*) 'Got to cycle number ',Icycle
-      Endif
+         If(Mod(Icycle,Ncycle/10).Eq.0) Then
+           Write(6,*) 'Got to cycle number ',Icycle
+         Endif
 
          Nmove = Max(20,Npart)
 
@@ -469,6 +471,9 @@ C              Write(22,'(A,3f15.5)') 'Ar  '
      &              ,4.0d0*Ry(J),4.0d0*Rz(J)
             Enddo
 
+
+C     Write chemical potential
+            If(Icycle.Gt.Ninit) Call Sample(5,Iensemble)
          Endif
       Enddo
 

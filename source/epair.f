@@ -50,8 +50,8 @@ C     Compute The Energy Of Particle Ipart In Box Ib
       Else If(Potential.Eq.0) Then
          Radius  = 0.5d0*(Eps(Yourtype,Yourtype)+Eps(Mytype,Mytype))
          If(R2.Lt.Radius) Then
-            Upot = Upot + 1000000d0
-            Vir  = Vir + 1000000d0
+            Upot = Upot + 10000000000d0
+            Vir  = Vir + 10000000000d0
          Else
             Upot = Upot
             Vir  = Vir
