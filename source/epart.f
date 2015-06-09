@@ -59,8 +59,8 @@ C     Compute The Energy Of Particle Ipart In Box Ib
                   Radius  = 0.5d0*(Eps(Types(I),Types(I))+Eps(Mytype,Mytype))
                   If(R2.Lt.Radius) Then
                      Overlap = .True.
-                     Upot = Upot + 10000000000d0
-                     Vir  = Vir + 10000000000d0
+                     Upot = Upot + 1000000000000d0
+                     Vir  = Vir + 1000000000000d0
                   Else
                      Upot = Upot
                      Vir  = Vir
