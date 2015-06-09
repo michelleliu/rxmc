@@ -20,7 +20,7 @@ C     Compute The Energy Of Particle Ipart In Box Ib
 
       Do I=1,Npart
 
-         Do While (.Not.Overlap)
+         If(.Not.Overlap) Then
             If(Ibox(I).Eq.Ib.And.I.Ne.Ipart) Then
 
                Dx = Rx(I)-Xi
@@ -69,7 +69,7 @@ C     Compute The Energy Of Particle Ipart In Box Ib
                   Stop "Error Potential!"
                Endif
             Endif
-         Enddo
+         Endif
       Enddo
 
       Return
