@@ -24,5 +24,5 @@ C     Compute The Tail Correction Energy Of A Particle
          Utail = Utail + (8.0d0/3.0d0)*Pi*Rho(I)*Eps(I,Mytype)*R3
       Enddo
 
-      Stop
+      Return
       End
