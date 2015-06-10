@@ -14,23 +14,30 @@
 #              3 = Muvt Ensemble (Specify The Fugacity Press)
 #              4 = Gibbs Ensemble
 #              5 = Reaction Ensemble
-# Potential  = 0 for Hard Sphere, 1 for Lennard-Jones
 # Pdisp      = Fraction Displacements
 # Pswap      = Fraction Particle Swaps
 # Pvol       = Fraction Volume Changes
+# Prxn       = Fraction Reaction Moves
+# Potential  = 0 for Hard Sphere, 1 for Lennard-Jones w/ Cut and Shift,
+#              2 for Lennard-Jones w/ Cut and Tail Correction
+# Nrxn       = Number Of Reactions (defined at bottom)
+# Ntype      = Number Of Types (parameters below must be consistent)
 # Deltax     = Maximum Particle Displacement
 # Deltav     = Maximum Volume Change
 # Press/Fuga = Pressure (Npt Ensemble) Or Fugacity (Muvt Ensemble)
 #              For Muvt Ensemble: Fuga=Exp[Beta*Mu]/Beta
+# Nprint     = Frequency Of Trajectory Output
 # Box        = Size Of Each Simulation Box
-#
+# Nparts,MolFrac       = Number Of Each Type and IG Mol Fraction
+# Eps,Sig              = LJ Parameter Definitions
+# Nreactants,Nproducts = Number Of Reactants and Products for Each Rxn
+# Reactions,Stoich     = Specify Reactant/Product Types and Stoichiometry
 #
 # Output
 #
 # Coordnew    = Final Coordinates
 # Radial      = Radial Distribution Function
 # Traject.xyz = Trajectory (Can Be Visualized Using vmd)
-# Nprint      = Frequency of trajectory output
 # Results     = Instantaneous Values Of:
 #               For Gibbs Ensemble:
 #               Column 1: Cycle Number
@@ -45,7 +52,7 @@
 #               Column 2: Density
 #               Column 3: Energy Per Particle
 #               Column 4: Pressure
-# Rho         = Probability Distribution For A Certain Density
+# Rho         = Probability Distribution for A Certain Density
 
 # 1   1
 # 1   2

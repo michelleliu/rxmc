@@ -6,8 +6,8 @@
 C     Compute The Energy Of Particle Ipart In Box Ib
 
       Integer I,Ib,Ipart,Mytype
-      Double Precision Vir,Upot,Dx,Dy,Dz,R2,Bx,Hbx,Xi,Yi,Zi
-      Double Precision Radius
+      Double Precision Vir,Upot,Dx,Dy,Dz,R2,S2,Bx,Hbx,Xi,Yi,Zi
+      Double Precision Radius,Utail
       Logical Overlap
 
       Upot = 0.0d0
@@ -18,6 +18,11 @@ C     Compute The Energy Of Particle Ipart In Box Ib
 
       Overlap = .False.
 
+      If(Potential.Eq.2) Then
+C        Add Tail Correction
+         Call Tailc(Ib,Mytype,Utail)
+         Upot = Upot + Utail
+      Endif
       Do I=1,Npart
 
          If(.Not.Overlap) Then
@@ -49,10 +54,19 @@ C     Compute The Energy Of Particle Ipart In Box Ib
 
                If(Potential.Eq.1) Then
                   If(R2.Lt.Rcutsq) Then
-                     R2   = Sig(Types(I),Mytype)*1.0d0/R2
+                     S2   = (Sig(Types(I),Mytype))**2
+                     R2   = S2*1.0d0/R2
                      R2   = R2*R2*R2
                      Upot = Upot + 4.0d0*Eps(Types(I),Mytype)*R2*(R2-1.0d0)
      &                    - Ecut(Types(I),Mytype)
+                     Vir  = Vir  + 48.0d0*Eps(Types(I),Mytype)*R2*(R2-0.5d0)
+                  Endif
+               Else If(Potential.Eq.2) Then
+                  If(R2.Lt.Rcutsq) Then
+                     S2   = (Sig(Types(I),Mytype))**2
+                     R2   = S2*1.0d0/R2
+                     R2   = R2*R2*R2
+                     Upot = Upot + 4.0d0*Eps(Types(I),Mytype)*R2*(R2-1.0d0)
                      Vir  = Vir  + 48.0d0*Eps(Types(I),Mytype)*R2*(R2-0.5d0)
                   Endif
                Else If(Potential.Eq.0) Then

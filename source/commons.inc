@@ -6,7 +6,7 @@ C     Ntype    = Number Of Types
 C     Npboxtype= Number Of Type in Box
 C     MolFrac  = Fraction of particles in ideal gas
 C     Ibox     = In Which Box Is A Particle ?
-C     Nbox     = Number Of Boxes (2 For Gibbs Ensemble, 1 For The Other Ones)
+C     Nbox     = Number Of Boxes (2 For Gibbs and Reaction Ensemble, 1 For The Other Ones)
 C     Rx/Ry/Rz = Coordinates
 C     Ecut     = Cut-Off Energy
 C     Rcutsq   = Cut-Off Radius Squared
@@ -42,6 +42,8 @@ C     Nprint   = Trajectory Print Frequency
       Parameter (Maxtype = 10)
       Parameter (Maxrxn = 5)
 
+      Double Precision Pi
+
       Double Precision Eps(Maxtype,Maxtype),Sig(Maxtype,Maxtype)
 
       Double Precision Rx(Maxpart),Ry(Maxpart),Rz(Maxpart),Box(2)
@@ -55,7 +57,7 @@ C     Nprint   = Trajectory Print Frequency
      $     ,ReactantStoich(Maxrxn,4),ProductStoich(Maxrxn,4)
 
       Common /Mycomms/ Rx,Ry,Rz,MolFrac
-     $     ,Box,Ecut,Rcutsq,Beta,Etotal,Eps,Sig
+     $     ,Box,Ecut,Rcutsq,Beta,Pi,Etotal,Eps,Sig
      $     ,Vtotal,Npart,Ibox,Npbox,Npboxtype,Nbox
      $     ,Nprint,Potential
      $     ,Nrxn,Ntype,Nparts,Types,Verbose
