@@ -130,6 +130,7 @@ C     Read in reactions
       Write(6,*) 'Linit                : ',Linit
       Write(6,*) 'Temp                 : ',Temp
       Write(6,*) 'Iens                 : ',Iensemble
+      Write(6,*) 'Potential            : ',Potential
       Write(6,*) 'Deltax               : ',Deltax
       Write(6,*) 'Deltav               : ',Deltav
 
@@ -475,7 +476,7 @@ C              Write(22,'(A,3f15.5)') 'Ar  '
 
 
 C     Write chemical potential
-            If(Icycle.Gt.Ninit) Call Sample(5,Iensemble)
+            If(Icycle.Gt.Ninit.and.Iensemble.Eq.5) Call Sample(5,Iensemble)
          Endif
       Enddo
 

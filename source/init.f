@@ -90,6 +90,7 @@ C     Monte Carlo Displacements To Remove Initial Overlaps
          Call Epart(Ib,Virnew,Unew,Rxtrial,Rytrial,Rztrial
      &        ,Ipart,Types(Ipart))
 
+         Write(6,*) Unew,Uold
          Call Accept(Dexp(-0.5d0*(Unew-Uold)),Laccept)
 
          If(Laccept) Then
