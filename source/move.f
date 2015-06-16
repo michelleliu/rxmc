@@ -61,7 +61,8 @@ C     Put New Particle In Box
       If((-Beta*(Enew-Eold)>0)) Then
          Laccept=.True.
       Else
-         Call Accept(Dexp(-Beta*(Unew-Uold)),Laccept)
+         !Call Accept(Dexp(-Beta*(Unew-Uold)),Laccept)
+         Call Accept(Dexp(-Beta*(Enew-Eold)),Laccept)
       Endif
 
       Av2 = Av2 + 1.0d0
