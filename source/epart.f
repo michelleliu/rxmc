@@ -18,9 +18,9 @@ C     Compute The Energy Of Particle Ipart In Box Ib
 
       Overlap = .False.
 
-      If(Potential.Eq.2) Then
+      If(Potential.Eq.2.And.Ntype.Eq.1) Then
 C        Add Tail Correction
-         Call Tailc(Ib,Mytype,Utail)
+         Call Tailc(Ib,1,Utail)
          Upot = Upot + Utail
       Endif
       Do I=1,Npart

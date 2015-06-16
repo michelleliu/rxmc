@@ -9,6 +9,7 @@ C     Displace A Randomly Selected Particle
       Integer Ib,Ipart
       Double Precision Rxtrial,Rytrial,Rztrial,Xi,Yi,Zi,Randomnumber,Unew,Uold
      $     ,Virnew,Virold,Av1,Av2,Delta
+     $     ,Vnew,Vold,Enew,Eold
 
       If(Npart.Eq.0) Return
 
@@ -43,12 +44,21 @@ C     Put Back In The Box
       Yi = Ry(Ipart)
       Zi = Rz(Ipart)
 
-      Call Epart(Ib,Virold,Uold,Xi,Yi,Zi,Ipart,Types(Ipart))
-      Call Epart(Ib,Virnew,Unew,Rxtrial,Rytrial,Rztrial
-     &     ,Ipart,Types(Ipart))
+      Call Etot(Ib,Vold,Eold)
 
-      !Write(6,*) Unew,Uold
-      If((-Beta*(Unew-Uold)>0)) Then
+C     Put New Particle In Box
+      Rx(Ipart) = Rxtrial
+      Ry(Ipart) = Rytrial
+      Rz(Ipart) = Rztrial
+
+      Call Etot(Ib,Vnew,Enew)
+
+!      Call Epart(Ib,Virold,Uold,Xi,Yi,Zi,Ipart,Types(Ipart))
+!      Call Epart(Ib,Virnew,Unew,Rxtrial,Rytrial,Rztrial
+!     &     ,Ipart,Types(Ipart))
+
+      !If((-Beta*(Unew-Uold)>0)) Then
+      If((-Beta*(Enew-Eold)>0)) Then
          Laccept=.True.
       Else
          Call Accept(Dexp(-Beta*(Unew-Uold)),Laccept)
@@ -61,12 +71,18 @@ C     Accept Or Reject
       If(Laccept) Then
          Av1 = Av1 + 1.0d0
 
-         Etotal(Ib) = Etotal(Ib) + Unew   - Uold
-         Vtotal(Ib) = Vtotal(Ib) + Virnew - Virold
+         Etotal(Ib) = Enew
+         Vtotal(Ib) = Vnew
+         !Etotal(Ib) = Etotal(Ib) + Unew   - Uold
+         !Vtotal(Ib) = Vtotal(Ib) + Virnew - Virold
 
-         Rx(Ipart) = Rxtrial
-         Ry(Ipart) = Rytrial
-         Rz(Ipart) = Rztrial
+         !Rx(Ipart) = Rxtrial
+         !Ry(Ipart) = Rytrial
+         !Rz(Ipart) = Rztrial
+      Else
+         Rx(Ipart) = Xi
+         Ry(Ipart) = Yi
+         Rz(Ipart) = Zi
       Endif
 
       Return

@@ -69,7 +69,7 @@ C     Compute New Energy
          Vtotal(2) = Virnew2
       Else
 
-C     Reejct, Resotre Coordinates
+C     Reject, Restore Coordinates
 
          Box(1) = Boxold(1)
          Box(2) = Boxold(2)

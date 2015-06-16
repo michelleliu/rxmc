@@ -18,11 +18,11 @@ C     Compute The Energy Total Of Box Ib
       Do I=1,Npart-1
 
          If(Ibox(I).Eq.Ib) Then
-            If(Potential.Eq.2) Then
-C              Add Tail Correction
-               Call Tailc(Ib,Types(I),Utail)
-               Upot = Upot + Utail
-            Endif
+!            If(Potential.Eq.2) Then
+!C              Add Tail Correction
+!               Call Tailc(Ib,Types(I),Utail)
+!               Upot = Upot + Utail
+!            Endif
 
             Do J=I+1,Npart
 
@@ -88,12 +88,18 @@ C                 Minimum Image Convention
       Enddo
 
 C     Don't forget tail correction of last particle !!
-      If(Ibox(Npart).Eq.Ib) Then
-         If(Potential.Eq.2) Then
-C           Add Tail Correction
-            Call Tailc(Ib,Types(Npart),Utail)
-            Upot = Upot + Utail
-         Endif
+!      If(Ibox(Npart).Eq.Ib) Then
+!         If(Potential.Eq.2) Then
+!C           Add Tail Correction
+!            Call Tailc(Ib,Types(Npart),Utail)
+!            Upot = Upot + Utail
+!         Endif
+!      Endif
+
+      If(Potential.Eq.2.And.Ntype.Eq.1) Then
+C        Add Tail Correction
+         Call Tailc(Ib,Types(Npart),Utail)
+         Upot = Upot + Npart*Utail
       Endif
 
       Return
