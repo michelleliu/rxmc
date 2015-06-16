@@ -7,7 +7,7 @@ C     Displace A Randomly Selected Particle
 
       Logical Laccept
       Integer Ib,Ipart
-      Double Precision Rxtrial,Rytrial,Rztrial,Xi,Yi,Zi,Randomnumber,Unew,Uold
+      Double Precision Rxtrial,Rytrial,Rztrial,Rxo,Ryo,Rzo,Randomnumber,Unew,Uold
      $     ,Virnew,Virold,Av1,Av2,Delta
      $     ,Vnew,Vold,Enew,Eold
 
@@ -40,9 +40,9 @@ C     Put Back In The Box
          Rztrial = Rztrial - Box(Ib)
       Endif
 
-      Xi = Rx(Ipart)
-      Yi = Ry(Ipart)
-      Zi = Rz(Ipart)
+      Rxo = Rx(Ipart)
+      Ryo = Ry(Ipart)
+      Rzo = Rz(Ipart)
 
       Call Etot(Ib,Vold,Eold)
 
@@ -81,9 +81,9 @@ C     Accept Or Reject
          !Ry(Ipart) = Rytrial
          !Rz(Ipart) = Rztrial
       Else
-         Rx(Ipart) = Xi
-         Ry(Ipart) = Yi
-         Rz(Ipart) = Zi
+         Rx(Ipart) = Rxo
+         Ry(Ipart) = Ryo
+         Rz(Ipart) = Rzo
       Endif
 
       Return

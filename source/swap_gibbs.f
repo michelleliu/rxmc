@@ -9,7 +9,7 @@ C     Particle Swap In The Gibbs Ensemble
       Integer Iadd,Idel,Ipart,Iswaptype
       Double Precision Rxo,Ryo,Rzo,Randomnumber,Av1,Av2,Upotadd,Upotdel
      $     ,Viradd,Virdel
-     $     ,Vnew1,Enew1,Vnew2,Enew2
+     $     ,Vnew1,Enew1,Vnew2,Enew2,Npbtold1,Npbtold2
 
 C     Select At Random Which Box To Add / Remove
 
@@ -35,10 +35,13 @@ C     Make sure particle is of type Iswaptype
          Goto 1
       Endif
 
-      Ibox(Ipart) = Iadd
       Rxo = Rx(Ipart)
       Ryo = Ry(Ipart)
       Rzo = Rz(Ipart)
+      Npbtold1 = Npboxtype(Idel,Iswaptype)
+      Npbtold2 = Npboxtype(Iadd,Iswaptype)
+
+      Ibox(Ipart) = Iadd
       Npboxtype(Iadd,Iswaptype) = Npboxtype(Iadd,Iswaptype) + 1
       Npboxtype(Idel,Iswaptype) = Npboxtype(Idel,Iswaptype) - 1
       Npbox(Iadd) = Npbox(Iadd) + 1
@@ -55,12 +58,15 @@ C     Make sure particle is of type Iswaptype
 
       Call Etot(Idel,Vnew1,Enew1)
       Call Etot(Iadd,Vnew2,Enew2)
+
       !Call Epart(Iadd,Viradd,Upotadd,Xi,Yi,Zi,0,Iswaptype)
 
-      Call Accept((Dble(Npboxtype(Idel,Iswaptype))*(Box(Iadd)**3)/
-     &     ((Box(Idel)**3)*Dble(Npboxtype(Iadd,Iswaptype)+1)))*
+      Call Accept((Dble(Npbtold1)*(Box(Iadd)**3)/
+     &     ((Box(Idel)**3)*Dble(Npbtold2+1)))*
      &     Dexp(-Beta*(Enew1+Enew2-Etotal(1)-Etotal(2))),Laccept)
 
+!      Call Accept((Dble(Npboxtype(Idel,Iswaptype))*(Box(Iadd)**3)/
+!     &     ((Box(Idel)**3)*Dble(Npboxtype(Iadd,Iswaptype)+1)))*
 !     &     Dexp(-Beta*(Upotadd-Upotdel)),Laccept)
 
       Av2 = Av2 + 1.0d0
@@ -90,10 +96,11 @@ C
 C         Vtotal(Iadd) = Vtotal(Iadd) + Viradd
 C         Vtotal(Idel) = Vtotal(Idel) - Virdel
       Else
+
 C     Reject, Restore Configuration
 
-         Npboxtype(Iadd,Iswaptype) = Npboxtype(Iadd,Iswaptype) - 1
-         Npboxtype(Idel,Iswaptype) = Npboxtype(Idel,Iswaptype) + 1
+         Npboxtype(Iadd,Iswaptype) = Npbtold2
+         Npboxtype(Idel,Iswaptype) = Npbtold1
          Npbox(Iadd) = Npbox(Iadd) - 1
          Npbox(Idel) = Npbox(Idel) + 1
 
