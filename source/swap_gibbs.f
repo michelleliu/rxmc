@@ -7,8 +7,9 @@ C     Particle Swap In The Gibbs Ensemble
 
       Logical Laccept
       Integer Iadd,Idel,Ipart,Iswaptype
-      Double Precision Xi,Yi,Zi,Randomnumber,Av1,Av2,Upotadd,Upotdel
+      Double Precision Rxo,Ryo,Rzo,Randomnumber,Av1,Av2,Upotadd,Upotdel
      $     ,Viradd,Virdel
+     $     ,Vnew1,Enew1,Vnew2,Enew2,Npbtold1,Npbtold2
 
 C     Select At Random Which Box To Add / Remove
 
@@ -34,49 +35,80 @@ C     Make sure particle is of type Iswaptype
          Goto 1
       Endif
 
-      Xi = Rx(Ipart)
-      Yi = Ry(Ipart)
-      Zi = Rz(Ipart)
+      Rxo = Rx(Ipart)
+      Ryo = Ry(Ipart)
+      Rzo = Rz(Ipart)
+      Npbtold1 = Npboxtype(Idel,Iswaptype)
+      Npbtold2 = Npboxtype(Iadd,Iswaptype)
 
-      Call Epart(Idel,Virdel,Upotdel,Xi,Yi,Zi,Ipart,Types(Ipart))
+      Ibox(Ipart) = Iadd
+      Npboxtype(Iadd,Iswaptype) = Npboxtype(Iadd,Iswaptype) + 1
+      Npboxtype(Idel,Iswaptype) = Npboxtype(Idel,Iswaptype) - 1
+      Npbox(Iadd) = Npbox(Iadd) + 1
+      Npbox(Idel) = Npbox(Idel) - 1
 
-      Xi = Randomnumber()*Box(Iadd)
-      Yi = Randomnumber()*Box(Iadd)
-      Zi = Randomnumber()*Box(Iadd)
+      !Call Epart(Idel,Virdel,Upotdel,Xi,Yi,Zi,Ipart,Types(Ipart))
 
-      Call Epart(Iadd,Viradd,Upotadd,Xi,Yi,Zi,0,Iswaptype)
+      !Xi = Randomnumber()*Box(Iadd)
+      !Yi = Randomnumber()*Box(Iadd)
+      !Zi = Randomnumber()*Box(Iadd)
+      Rx(Ipart) = Randomnumber()*Box(Iadd)
+      Ry(Ipart) = Randomnumber()*Box(Iadd)
+      Rz(Ipart) = Randomnumber()*Box(Iadd)
 
-      Call Accept((Dble(Npboxtype(Idel,Iswaptype))*(Box(Iadd)**3)/
-     &     ((Box(Idel)**3)*Dble(Npboxtype(Iadd,Iswaptype)+1)))*
-     &     Dexp(-Beta*(Upotadd-Upotdel)),Laccept)
-C       Call Accept((Dble(Npbox(Idel))*(Box(Iadd)**3)/
-C      &     ((Box(Idel)**3)*Dble(Npbox(Iadd)+1)))*
-C      &     Dexp(-Beta*(Upotadd-Upotdel)),Laccept)
+      Call Etot(Idel,Vnew1,Enew1)
+      Call Etot(Iadd,Vnew2,Enew2)
+
+      !Call Epart(Iadd,Viradd,Upotadd,Xi,Yi,Zi,0,Iswaptype)
+
+      Call Accept((Dble(Npbtold1)*(Box(Iadd)**3)/
+     &     ((Box(Idel)**3)*Dble(Npbtold2+1)))*
+     &     Dexp(-Beta*(Enew1+Enew2-Etotal(1)-Etotal(2))),Laccept)
+
+!      Call Accept((Dble(Npboxtype(Idel,Iswaptype))*(Box(Iadd)**3)/
+!     &     ((Box(Idel)**3)*Dble(Npboxtype(Iadd,Iswaptype)+1)))*
+!     &     Dexp(-Beta*(Upotadd-Upotdel)),Laccept)
 
       Av2 = Av2 + 1.0d0
 
 C     Accept Or Reject
 
       If(Laccept) Then
-         Npboxtype(Iadd,Iswaptype) = Npboxtype(Iadd,Iswaptype) + 1
-         Npboxtype(Idel,Iswaptype) = Npboxtype(Idel,Iswaptype) - 1
-         Npbox(Iadd) = Npbox(Iadd) + 1
-         Npbox(Idel) = Npbox(Idel) - 1
+         !Npboxtype(Iadd,Iswaptype) = Npboxtype(Iadd,Iswaptype) + 1
+         !Npboxtype(Idel,Iswaptype) = Npboxtype(Idel,Iswaptype) - 1
+         !Npbox(Iadd) = Npbox(Iadd) + 1
+         !Npbox(Idel) = Npbox(Idel) - 1
 
-         Rx(Ipart) = Xi
-         Ry(Ipart) = Yi
-         Rz(Ipart) = Zi
-
-         Types(Ipart) = Iswaptype
-         Ibox(Ipart) = Iadd
+         !Types(Ipart) = Iswaptype
+         !Ibox(Ipart) = Iadd
 
          Av1 = Av1 + 1.0d0
 
-         Etotal(Iadd) = Etotal(Iadd) + Upotadd
-         Etotal(Idel) = Etotal(Idel) - Upotdel
+         Etotal(Iadd) = Enew2
+         Etotal(Idel) = Enew1
 
-         Vtotal(Iadd) = Vtotal(Iadd) + Viradd
-         Vtotal(Idel) = Vtotal(Idel) - Virdel
+         Vtotal(Iadd) = Vnew2
+         Vtotal(Idel) = Vnew1
+
+C         Etotal(Iadd) = Etotal(Iadd) + Upotadd
+C         Etotal(Idel) = Etotal(Idel) - Upotdel
+C
+C         Vtotal(Iadd) = Vtotal(Iadd) + Viradd
+C         Vtotal(Idel) = Vtotal(Idel) - Virdel
+      Else
+
+C     Reject, Restore Configuration
+
+         Npboxtype(Iadd,Iswaptype) = Npbtold2
+         Npboxtype(Idel,Iswaptype) = Npbtold1
+         Npbox(Iadd) = Npbox(Iadd) - 1
+         Npbox(Idel) = Npbox(Idel) + 1
+
+         Ibox(Ipart) = Idel
+         Rx(Ipart) = Rxo
+         Ry(Ipart) = Ryo
+         Rz(Ipart) = Rzo
+
       Endif
 
       Return

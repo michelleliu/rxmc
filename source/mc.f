@@ -24,8 +24,6 @@ C     Set Verbose to .True. for verbose debugging statements
       Avr1 = 0.0d0
       Avr2 = 0.0d0
 
-      Pi = 4.0d0*atan(1.0d0)
-
       Open(21,File="Input",Status="Unknown")
       Read(21,*)
       Read(21,*) Ncycle,Ninit,Linit,Temp,Iensemble
