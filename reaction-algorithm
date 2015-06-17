@@ -1,0 +1,10 @@
+Algorithm
+
+To calculate DeltaUrxn:
+- Calculate Upotdel of reactants (epart)
+- Sum Upotdel of reactants
+- Calculate pairwise energies (epair) and subtract from Upotdel
+- Calculate Upotadd of products (epart)
+- Sum Upotadd of products
+- Calculate pairwise energies (epair) and add to Upotadd
+- DeltaUrxn = Upotadd - Upotdel
