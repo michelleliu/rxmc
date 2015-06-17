@@ -99,7 +99,7 @@ C     Don't forget tail correction of last particle !!
       If(Potential.Eq.2.And.Ntype.Eq.1) Then
 C        Add Tail Correction
          Call Tailc(Ib,Types(Npart),Utail)
-         Upot = Upot + Npart*Utail
+         Upot = Upot + Npboxtype(Ib,Types(Npart))*Utail
       Endif
 
       Return
