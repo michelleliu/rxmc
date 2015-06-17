@@ -401,10 +401,10 @@ C     Particle Displacement
             If(Icycle.Gt.Ninit) Call Sample(2,Iensemble)
 
          Enddo
-C     FLOATING POINT ERROR FIXME
+C     FLOATING POINT ERROR FIXME ???
 C     Write results
          If(Nbox.Eq.2.AND.Ntype.Eq.1) Then
-            Write(23,'(7e20.10)')
+            Write(23,'(9e20.10)')
      &           Dble(Icycle),
      &           Dble(Npbox(1))/(Box(1)**3),
      &           Dble(Npbox(2))/(Box(2)**3),
@@ -413,9 +413,11 @@ C     Write results
      &           Dble(Npbox(1))/(Beta*(Box(1)**3))
      &           + Vtotal(1)/(3.0d0*(Box(1)**3)),
      &           Dble(Npbox(2))/(Beta*(Box(2)**3))
-     &           + Vtotal(2)/(3.0d0*(Box(2)**3))
+     &           + Vtotal(2)/(3.0d0*(Box(2)**3)),
+     &           (Box(1)**3),
+     &           (Box(2)**3)
          Else If(Nbox.Eq.2.AND.Ntype.Eq.2) Then
-            Write(23,'(11e20.10)')
+            Write(23,'(13e20.10)')
      &           Dble(Icycle),
      &           Dble(Npboxtype(1,1))/(Box(1)**3),
      &           Dble(Npboxtype(1,2))/(Box(1)**3),
@@ -428,9 +430,11 @@ C     Write results
      &           Dble(Npbox(1))/(Beta*(Box(1)**3))
      &           + Vtotal(1)/(3.0d0*(Box(1)**3)),
      &           Dble(Npbox(2))/(Beta*(Box(2)**3))
-     &           + Vtotal(2)/(3.0d0*(Box(2)**3))
+     &           + Vtotal(2)/(3.0d0*(Box(2)**3)),
+     &           (Box(1)**3),
+     &           (Box(2)**3)
          Else If(Nbox.Eq.2.AND.Ntype.Eq.3) Then
-            Write(23,'(11e20.10)')
+            Write(23,'(12e20.10)')
      &           Dble(Icycle),
      &           Dble(Npboxtype(1,1))/(Box(1)**3),
      &           Dble(Npboxtype(1,2))/(Box(1)**3),
@@ -442,14 +446,18 @@ C     Write results
      &           Dble(Npbox(1))/(Beta*(Box(1)**3))
      &           + Vtotal(1)/(3.0d0*(Box(1)**3)),
      &           Dble(Npbox(2))/(Beta*(Box(2)**3))
-     &           + Vtotal(2)/(3.0d0*(Box(2)**3))
+     &           + Vtotal(2)/(3.0d0*(Box(2)**3)),
+     &           (Box(1)**3),
+     &           (Box(2)**3)
          Else
-            Write(23,'(4e20.10)')
+            Write(23,'(6e20.10)')
      &           Dble(Icycle),
      &           Dble(Npbox(1))/(Box(1)**3),
      &           Etotal(1)/Max(0.5d0,Dble(Npbox(1))),
      &           Dble(Npbox(1))/(Beta*(Box(1)**3))
-     &           + Vtotal(1)/(3.0d0*(Box(1)**3))
+     &           + Vtotal(1)/(3.0d0*(Box(1)**3)),
+     &           (Box(1)**3),
+     &           (Box(2)**3)
          Endif
 
          If(Icycle.Gt.Ninit) Then
