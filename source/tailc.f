@@ -17,12 +17,12 @@ C     Compute The Tail Correction Energy Of A Particle
 
       If(Mytype.Eq.-1) Then
          Do I=1,Ntype
-            Do J=1,Nytype
+            Do J=1,Ntype
                S3 = Sig(I,J)**3.0d0
                R3 = S3*1.0d0/R3
                R3 = R3*(R3*R3/3.0d0-1.0d0)
                Utail = Utail + (8.0d0/(3.0d0*Vol))*4.0d0*Datan(1.0d0)
-     &              *Npboxtype(I)*Npboxtype(J)*Eps(I,J)*S3*R3
+     &              *Npboxtype(Ib,I)*Npboxtype(Ib,J)*Eps(I,J)*S3*R3
             Enddo
          Enddo
       Else If(Mytype.Gt.0.And.Mytype.Le.Ntype) Then
@@ -32,10 +32,10 @@ C     Compute The Tail Correction Energy Of A Particle
             R3 = R3*(R3*R3/3.0d0-1.0d0)
             If(Mytype.Ne.I) Then
                Utail = Utail + (16.0d0/(3.0d0*Vol))*4.0d0*Datan(1.0d0)
-     &           *Npboxtype(I)*Eps(I,Mytype)*S3*R3
+     &           *Npboxtype(Ib,I)*Eps(I,Mytype)*S3*R3
             Else
                Utail = Utail + (8.0d0/(3.0d0*Vol))*4.0d0*Datan(1.0d0)
-     &           *(2.0d0*Npboxtype(I)-1.0d0)*Eps(I,Mytype)*S3*R3
+     &           *(2.0d0*Npboxtype(Ib,I)-1.0d0)*Eps(I,Mytype)*S3*R3
             Endif
 
          Enddo
