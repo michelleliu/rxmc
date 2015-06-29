@@ -51,6 +51,10 @@ C     Make sure particle is of type Iswaptype
 C     Accept Or Reject
 
       If(Laccept) Then
+         Rx(Ipart) = Xi
+         Ry(Ipart) = Yi
+         Rz(Ipart) = Zi
+
          Npboxtype(Iadd,Iswaptype) = Npboxtype(Iadd,Iswaptype) + 1
          Npboxtype(Idel,Iswaptype) = Npboxtype(Idel,Iswaptype) - 1
          Npbox(Iadd) = Npbox(Iadd) + 1
