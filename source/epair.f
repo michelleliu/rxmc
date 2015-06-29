@@ -50,13 +50,6 @@ C     Compute The Energy Of Particle Ipart In Box Ib
          Endif
       Else If(Potential.Eq.2) Then
          Stop "Error Potential Tail Correction !!!"
-         If(R2.Lt.Rcutsq) Then
-            S2   = (Sig(Yourtype,Mytype))**2
-            R2   = S2*1.0d0/R2
-            R2   = R2*R2*R2
-            Upot = Upot + 4.0d0*Eps(Yourtype,Mytype)*R2*(R2-1.0d0)
-            Vir  = Vir  + 48.0d0*Eps(Yourtype,Mytype)*R2*(R2-0.5d0)
-         Endif
       Else If(Potential.Eq.0) Then
          Radius  = 0.5d0*(Eps(Yourtype,Yourtype)+Eps(Mytype,Mytype))
          If(R2.Lt.Radius) Then

@@ -1,16 +1,18 @@
-      Subroutine Etot(Ib,Vir,Upot)
+      Subroutine Etot(Ibb,Vir,Upot)
       Implicit None
 
       Include 'commons.inc'
 
 C     Compute The Energy Total Of Box Ib
 
-      Integer I,J,Ib
+      Integer I,J,Ib,Ibb
       Double Precision Vir,Upot,Dx,Dy,Dz,R2,S2,Bx,Hbx
       Double Precision Radius,Utail
 
       Upot = 0.0d0
       Vir  = 0.0d0
+
+      Ib=Ibb
 
       Bx  = Box(Ib)
       Hbx = 0.5d0*Box(Ib)

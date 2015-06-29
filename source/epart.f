@@ -1,11 +1,11 @@
-      Subroutine Epart(Ib,Vir,Upot,Xi,Yi,Zi,Ipart,Mytype)
+      Subroutine Epart(Ibb,Vir,Upot,Xi,Yi,Zi,Ipart,ParticleType)
       Implicit None
 
       Include 'commons.inc'
 
 C     Compute The Energy Of Particle Ipart In Box Ib
 
-      Integer I,Ib,Ipart,Mytype
+      Integer I,Ib,Ibb,Ipart,Mytype,ParticleType
       Double Precision Vir,Upot,Dx,Dy,Dz,R2,S2,Bx,Hbx,Xi,Yi,Zi
       Double Precision Radius,Utail
       Logical Overlap
@@ -13,11 +13,13 @@ C     Compute The Energy Of Particle Ipart In Box Ib
       Upot = 0.0d0
       Vir  = 0.0d0
 
+      Ib=Ibb
       Bx  = Box(Ib)
       Hbx = 0.5d0*Box(Ib)
 
       Overlap = .False.
 
+      Mytype=ParticleType
       If(Potential.Eq.2) Then
 C        Add Tail Correction
          Call Tailc(Ib,Mytype,Utail)
