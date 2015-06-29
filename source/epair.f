@@ -41,7 +41,7 @@ C     Compute The Energy Of Particle Ipart In Box Ib
 
       If(Potential.Eq.1) Then
          If(R2.Lt.Rcutsq) Then
-            S2   = (Sig(Yourtype,Mytype))**2
+            S2   = (Sig(Yourtype,Mytype))**2 ! FIXME
             R2   = S2*1.0d0/R2
             R2   = R2*R2*R2
             Upot = Upot + 4.0d0*Eps(Yourtype,Mytype)*R2*(R2-1.0d0)
