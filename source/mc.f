@@ -336,7 +336,26 @@ C     Start Of The Simulation
       Open(22,File="Traject.xyz",Status="Unknown")
       Open(23,File="Results",Status="Unknown")
 
+      Open(42,File="Initial.xyz",Status="Unknown")
+      Write(42,*) Npart
+      Write(42,*)
+
+C     Write trajectory
+      Do J=1,Npart
+         If(Ibox(J).Eq.2) Then
+            Dummy = 4.0d0*(Box(1) + 2.0d0)
+         Else
+            Dummy = 0.0d0
+         Endif
+C        Write(22,'(A,3f15.5)') 'Ar  '
+         Write(42,'(I2,3f15.5)') Types(J)
+     &        ,4.0d0*Rx(J)+Dummy
+     &        ,4.0d0*Ry(J),4.0d0*Rz(J)
+      Enddo
+
 C     Starting simulation loop
+
+
 
       Do Icycle=1,Ncycle
          If(Mod(Icycle,Ncycle/10).Eq.0) Then
