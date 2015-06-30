@@ -522,9 +522,11 @@ C     Print closing statements
       Open(21,File="Coordnew",Status="Unknown")
       Write(21,*) Box(1),Box(2)
       Write(21,*) Npart
+      Write(21,*) Ntype
+      Write(21,*) Nbox
 
       Do I=1,Npart
-         Write(21,'(3e20.10,i5)') Rx(I),Ry(I),Rz(I),Ibox(I)
+         Write(21,'(3e20.10,2i5)') Rx(I),Ry(I),Rz(I),Types(I),Ibox(I)
       Enddo
       Close(21)
 
