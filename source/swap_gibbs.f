@@ -7,8 +7,7 @@ C     Particle Swap In The Gibbs Ensemble
 
       Logical Laccept
       Integer Iadd,Idel,Ipart,Iswaptype,Npbtold1,Npbtold2
-      Double Precision Rxo,Ryo,Rzo,Randomnumber,Av1,Av2,Upotadd,Upotdel
-     $     ,Viradd,Virdel
+      Double Precision Rxo,Ryo,Rzo,Randomnumber,Av1,Av2
      $     ,Vnew1,Enew1,Vnew2,Enew2
 
 C     Select At Random Which Box To Add / Remove

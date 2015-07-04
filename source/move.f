@@ -7,8 +7,9 @@ C     Displace A Randomly Selected Particle
 
       Logical Laccept
       Integer Ib,Ipart
-      Double Precision Xi,Yi,Zi,Randomnumber,Unew,Uold
+      Double Precision Xi,Yi,Zi,Rxo,Ryo,Rzo,Randomnumber,Unew,Uold
      $     ,Virnew,Virold,Av1,Av2,Delta
+     $     ,Enew,Vnew,DiffE,DiffV
 
       If(Npart.Eq.0) Return
 
@@ -39,14 +40,31 @@ C     Put Back In The Box
          Zi = Zi - Box(Ib)
       Endif
 
+      Rxo = Rx(Ipart)
+      Ryo = Ry(Ipart)
+      Rzo = Rz(Ipart)
+
       Call Epart(Ib,Virold,Uold,Rx(Ipart),Ry(Ipart),Rz(Ipart),Ipart,Types(Ipart))
       Call Epart(Ib,Virnew,Unew,Xi,Yi,Zi
      &     ,Ipart,Types(Ipart))
 
-      If((-Beta*(Unew-Uold)>0)) Then
+      Rx(Ipart) = Xi
+      Ry(Ipart) = Yi
+      Rz(Ipart) = Zi
+
+      Call Etot(Ib,Vnew,Enew)
+
+      DiffE=Unew-Uold-Enew+Etotal(Ib)
+      DiffV=Virnew-Virold-Vnew+Vtotal(Ib)
+      If(DiffE.Gt.1e-9) Then
+         Stop "ERROR Energy Difference !!! "
+      Endif
+
+
+      If((-Beta*(Enew-Etotal(Ib))>0)) Then
          Laccept=.True.
       Else
-         Call Accept(Dexp(-Beta*(Unew-Uold)),Laccept)
+         Call Accept(Dexp(-Beta*(Enew-Etotal(Ib))),Laccept)
       Endif
 
       Av2 = Av2 + 1.0d0
@@ -56,12 +74,16 @@ C     Accept Or Reject
       If(Laccept) Then
          Av1 = Av1 + 1.0d0
 
-         Etotal(Ib) = Etotal(Ib) + Unew   - Uold
-         Vtotal(Ib) = Vtotal(Ib) + Virnew - Virold
+         Etotal(Ib) = Enew
+         Vtotal(Ib) = Vnew
 
-         Rx(Ipart) = Xi
-         Ry(Ipart) = Yi
-         Rz(Ipart) = Zi
+      Else
+
+C     Reject, Restore Old Configuration
+         Rx(Ipart) = Rxo
+         Ry(Ipart) = Ryo
+         Rz(Ipart) = Rzo
+
       Endif
 
       Return
